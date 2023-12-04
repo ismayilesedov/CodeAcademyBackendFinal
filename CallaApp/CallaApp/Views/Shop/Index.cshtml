@@ -1,0 +1,278 @@
+﻿@model ShopVM
+
+@{
+    ViewData["Title"] = "Shop";
+
+}
+
+
+<!-- Main star -->
+<main>
+    <section id="shop-header-img">
+        <div class="shop-bg-img" style="background-image: url(../../assets/images/@Model.HeaderBackgrounds["PagesBg"])">
+            <h1>SHOP</h1>
+            <img src="~/assets/images/banner-on-logo.png" alt="">
+        </div>
+    </section>
+
+    <section id="shop-content-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9 col-md-12 col-sm-12">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="show-result">
+                                <p>SHOWING (@Model.CountProducts) RESULTS</p>
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="sort">
+                                <form name="sortProducts" id="sortProducts">
+                                    <select id="sort" name="sort" class="form-select" aria-label="Default select example">
+                                        <option value="1" selected disabled>Choose option</option>
+                                        <option value="2">Sort By Latest</option>
+                                        <option value="3">Sort By Popularity</option>
+                                        <option value="4">Sort By Avarage Rating</option>
+                                        <option value="5">Sort By Price:Low To High</option>
+                                        <option value="6">Sort By Price:High to Low</option>
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <div class="product-grid-view row">
+                            <partial name="_ProductListPartial" model="Model.PaginateDatas" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-3 col-md-12 col-sm-12">
+                    <div class="col-lg-12 ">
+                        <div class="product-price">
+                            <div class="price-title">
+                                <h3>FILTER BY PRICE</h3>
+                            </div>
+                            <div class="price-filter">
+                                <form id="filterForm" method="post" asp-controller="shop" asp-action="index">
+                                    <div class="card">
+                                        <div class="range-slider">
+                                            <input name="value1" type="range" class="min-price" value="100" min="10" max="500"
+                                                   step="10" style="accent-color: #d8d8d8;">
+                                            <input name="value2" type="range" class="max-price" value="250" min="10" max="500"
+                                                   step="10" style="accent-color: #d8d8d8;">
+                                        </div>
+                                        <div class="price-content">
+                                            <div style="color: gray;">
+                                                <p>Price:</p>
+                                            </div>
+                                            <div>
+                                                <p id="min-value">50</p>
+                                            </div>
+                                            <div>
+                                                <p id="max-value">500</p>
+                                            </div>
+                                            <div class="filter-button">
+                                                <button type="submit">FILTER</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+
+                        <div class="category">
+                            <div class="category-header">
+                                <h6>CATEGORIES</h6>
+                            </div>
+                            <div class="categories">
+                                <ul>
+                                    <li>
+                                        <a href="" class="all-products">
+
+                                            All (@Model.CountProducts)
+                                        </a>
+                                    </li>
+                                    @foreach (var category in Model.Categories)
+                                    {
+                                        <li>
+                                            <a href="" data-id="@category.Id" class="prod-category">@category.Name (@category.ProductCategories?.Count())</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="brand">
+                            <div class="brand-header">
+                                <h6>BRANDS</h6>
+                            </div>
+                            <div class="brands">
+                                <ul>
+                                    <li>
+                                        <a href="" class="all-products">
+                                            All (@Model.CountProducts)
+                                        </a>
+                                    </li>
+                                    @foreach (var brand in Model.Brands)
+                                    {
+                                        <li>
+                                            <a href="" data-id="@brand.Id" class="prod-brand">@brand.Name (@brand.Products?.Count())</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="color">
+                            <div class="color-header">
+                                <h6>COLORS</h6>
+                            </div>
+                            <div class="colors">
+                                <ul>
+                                    <li>
+                                        <a href="" class="all-products">
+                                            All (@Model.CountProducts)
+                                        </a>
+                                    </li>
+                                    @foreach (var color in Model.Colors)
+                                    {
+                                        <li>
+                                            <a href="" data-id="@color.Id" class="prod-color">@color.Name (@color.ProductColors?.Count())</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="size">
+                            <div class="size-header">
+                                <h6>SIZES</h6>
+                            </div>
+                            <div class="sizes">
+                                <ul>
+                                    <li>
+                                        <a href="" class="all-products">
+                                            All (@Model.CountProducts)
+                                        </a>
+                                    </li>
+                                    @foreach (var size in Model.Sizes)
+                                    {
+                                        <li>
+                                            <a href="" data-id="@size.Id" class="prod-size">@size.Name (@size.ProductSizes?.Count())</a>
+                                        </li>
+                                    }
+
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="tag">
+                            <div class="tag-header">
+                                <h6>TAGS</h6>
+                            </div>
+                            <div class="tags">
+                                <ul>
+                                    @foreach (var tag in Model.Tags)
+                                    {
+                                        <li><a href="" data-id="@tag.Id" class="prod-tag">@tag.Name</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="top-products">
+                            <div class="top-header">
+                                <h6>TOP PRODUCTS</h6>
+                            </div>
+                            <div class="top-product-detail">
+                                <ul>
+                                    <li>
+                                        <a href="">
+                                            <div class="top-img">
+                                                <img src="~/assets/images/product-img-pillow1.jpg"
+                                                     style="width: 90px; height: 110px;" alt="">
+                                            </div>
+                                            <div class="product-detail">
+                                                <div class="product-name">
+                                                    <p>Pillow</p>
+                                                </div>
+                                                <div class="product-rate">
+                                                    <i class="fa-solid fa-star" style="color: #b97a56;"></i>
+                                                    <i class="fa-solid fa-star" style="color: #b97a56;"></i>
+                                                    <i class="fa-solid fa-star" style="color: #b97a56;"></i>
+                                                    <i class="fa-regular fa-star" style="color: #b97a56;"></i>
+                                                    <i class="fa-regular fa-star" style="color: #b97a56;"></i>
+                                                </div>
+                                                <div class="product-price">
+                                                    <span>£<span>12</span></span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
+                                            <div class="top-img">
+                                                <img src="~/assets/images/product-img-star1.jpg"
+                                                     style="width: 90px; height: 110px;" alt="">
+                                            </div>
+                                            <div class="product-detail">
+                                                <div class="product-name">
+                                                    <p>Decor</p>
+                                                </div>
+                                                <div class="product-rate">
+                                                    <i class="fa-solid fa-star" style="color: #b97a56;"></i>
+                                                    <i class="fa-solid fa-star" style="color: #b97a56;"></i>
+                                                    <i class="fa-solid fa-star" style="color: #b97a56;"></i>
+                                                    <i class="fa-solid fa-star" style="color: #b97a56;"></i>
+                                                    <i class="fa-regular fa-star" style="color: #b97a56;"></i>
+                                                </div>
+                                                <div class="product-price">
+                                                    <span>£<span>50</span></span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
+                                            <div class="top-img">
+                                                <img src="~/assets/images/product-img-flowerPot.jpg"
+                                                     style="width: 90px; height: 110px;" alt="">
+                                            </div>
+                                            <div class="product-detail">
+                                                <div class="product-name">
+                                                    <p>Pillow</p>
+                                                </div>
+                                                <div class="product-rate">
+                                                    <i class="fa-solid fa-star" style="color: #b97a56;"></i>
+                                                    <i class="fa-solid fa-star" style="color: #b97a56;"></i>
+                                                    <i class="fa-solid fa-star" style="color: #b97a56;"></i>
+                                                    <i class="fa-solid fa-star" style="color: #b97a56;"></i>
+                                                    <i class="fa-solid fa-star" style="color: #b97a56;"></i>
+                                                </div>
+                                                <div class="product-price">
+                                                    <span>£<span>85</span></span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+<!-- Main end -->
+@section Scripts{
+    <script src="~/assets/js/shop.js"></script>
+    @*<script src="~/assets/js/common.js"></script>*@
+
+}

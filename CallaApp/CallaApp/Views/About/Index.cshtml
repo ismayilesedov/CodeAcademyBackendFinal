@@ -1,0 +1,119 @@
+﻿@model AboutVM
+@{
+    ViewData["Title"] = "About";
+}
+
+<main>
+
+    <section id="about-header-img">
+        <div class="about-bg-img" style="background-image: url(../../assets/images/@Model.HeaderBackgrounds["PagesBg"])">
+            <h1>ABOUT US</h1>
+            <img src="~/assets/images/banner-on-logo.png" alt="">
+        </div>
+    </section>
+
+    <section id="about-story">
+        <div class="container my-5">
+            <div class="row">
+                <div class="col-lg-6 col-md-12 col-sm-12 about-big-img">
+                    <img class="img-fluid" src="~/assets/images/@Model.Abouts.FirstOrDefault()?.Image" alt="">
+                </div>
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <div class="story-content">
+                        <div class="story-title">
+                            <h1>@Model.Abouts.FirstOrDefault()?.Title</h1>
+                        </div>
+                        <div class="story-logo">
+                            <img src="~/assets/images/banner-on-logo.png" alt="">
+                        </div>
+                        <div class="story-desc">
+                            <p>
+                                @Model.Abouts.FirstOrDefault()?.Description
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about-strategy">
+        <div class="container my-5">
+            <div class="row">
+
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <div class="strategy-content">
+                        <div class="strategy-title">
+                            <h1>
+                                @Model.Abouts.LastOrDefault()?.Title
+                            </h1>
+                        </div>
+                        <div class="strategy-logo">
+                            <img src="~/assets/images/banner-on-logo.png" alt="">
+                        </div>
+                        <div class="strategy-desc">
+                            <p>
+                                @Model.Abouts.LastOrDefault()?.Description
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12 col-sm-12 about-big-img">
+                    <img class="img-fluid" src="~/assets/images/@Model.Abouts.LastOrDefault()?.Image" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="our-success">
+        <div class="container mt-5">
+            <div class="col-lg-12">
+                <div class="success-content">
+                    <h4>@Model.HeaderBackgrounds["Our success"]</h4>
+                    <h2> @Model.HeaderBackgrounds["Testimontials"] </h2>
+                    <div class="arrival-img"> <img src="~/assets/images/slider-on-logo.png" alt=""> </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="successes">
+        <div class="container mt-5">
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    @foreach (var team in Model.Teams.Skip(4))
+                    {
+                        <div class="swiper-slide slider1">
+
+                            <div class="row">
+                                <div class="col-lg-3 col-mg-3 col-sm-3">
+                                    <img src="~/assets/images/@team.Image" alt="">
+                                </div>
+                                <div class="col-lg-9 col-md-9 col-sm-9">
+                                    <div class="successes-content">
+                                        <div class="success-text">
+                                            <p>
+                                                @team.Testimontial
+                                            </p>
+                                        </div>
+                                        <div class="author">
+                                            <div class="author-name"><span>@team.Name</span></div>
+                                            <div class="author-job"><span> - @team.Position.Name</span></div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+@section Scripts{
+    <script src="~/assets/js/about.js"></script>
+}

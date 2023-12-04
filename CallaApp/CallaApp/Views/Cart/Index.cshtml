@@ -1,0 +1,118 @@
+﻿@model List<CartDetailVM>
+@inject ILayoutService headerBackground
+@{
+    ViewData["Title"] = "Cart";
+    decimal grandTotal = 0;
+}
+
+<!-- Main star -->
+<main>
+    <section id="cart-header-img">
+        <div class="cart-bg-img" style="background-image: url(../../assets/images/@headerBackground.GetHeaderBackgroundData()["PagesBg"])">
+            <h1>CART</h1>
+            <img src="~/assets/images/banner-on-logo.png" alt="">
+        </div>
+    </section>
+    <section id="cart-products" @*style="position: relative"*@>
+        <div class="container">
+            @if (Model.Count > 0)
+            {
+                <div class="basket-products">
+                    <table class="table product-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Image</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Count</th>
+                                <th scope="col">Total</th>
+                                <th class="product_remove" scope="col">Setting</th>
+                            </tr>
+
+                        </thead>
+                        <tbody class="table-body">
+                            @foreach (var item in Model)
+                            {
+                                <tr data-id="@item.Id">
+
+                                    <td>
+                                        <img src="~/assets/images/@item.Image" alt="">
+                                    </td>
+                                    <td>
+                                        <span>@item.Name</span>
+                                    </td>
+                                    <td>
+                                        <span>£ </span><span>@item.Price.ToString("0.00")</span>
+                                    </td>
+                                    <td>
+                                        <button><i class="fa-solid fa-minus dec"></i></button>
+                                        <span><input type="text" value="@item.Count"></span>
+                                        <button><i class="fa-solid fa-plus inc"></i></button>
+                                    </td>
+                                    <td>
+                                        <span>£ </span><span> @item.Total.ToString("0.00")</span>
+                                        @*@item.Total.ToString("0.00")*@
+                                    </td>
+                                    <td class="product_remove">
+                                        <i class="fa-solid fa-trash-can delete-cart" style="cursor: pointer;"></i>
+                                    </td>
+
+                                </tr>
+                            }
+
+
+                        </tbody>
+
+                    </table>
+                    <div class="buttons d-flex justify-content-between" style=" margin-top: 30px;">
+                        <a asp-controller="Shop" asp-action="Index" style="padding: 12px; background-color: #b97a56; border: none;" class="btn btn-primary shop">Continue shopping</a>
+                        <div class="btn btn-primary grandTotal" style=" padding-top: 12px;  background-color: #b97a56; border: none;">
+
+                            <div class="total-price" style="display: flex; /*justify-content: space-between;*/">
+                                <span>Grand total: £ </span>
+                                @foreach (var item in Model)
+                                {
+                                    grandTotal += item.Total;
+                                }
+                                <span class="grand-total">@grandTotal.ToString("0.00")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                @*<a asp-controller="Shop" asp-action="Index" style="padding: 12px; background-color: #b97a56; border: none; position: absolute; right: 92px; top: 515px;" class="btn btn-primary shop">Prosses to checkout</a>*@
+            }
+            else
+            {
+                <div class="show-alert">
+                    <div class="alert">
+                        <button class="btn btn-danger btn-red">YOU HAVE NO ITEMS IN YOUR SHOPPING CART.</button>
+
+                    </div>
+
+                    <div class="button-shop">
+                        <a asp-controller="Shop" asp-action="Index" style="background-color: #b97a56; border: none; padding: 12px;" class="btn btn-primary btn-orange">Continue shopping</a>
+                    </div>
+
+                </div>
+            }
+
+            <div class="show-alert d-none">
+                <div class="alert">
+                    <button class="btn btn-danger btn-red">YOU HAVE NO ITEMS IN YOUR SHOPPING CART.</button>
+
+                </div>
+
+                <div class="button-shop">
+                    <a asp-controller="Shop" asp-action="Index" style="background-color: #b97a56; border: none; padding: 12px;" class="btn btn-primary btn-orange">Continue shopping</a>
+                </div>
+
+            </div>
+
+
+        </div>
+    </section>
+
+</main>
+<!-- Main end -->

@@ -1,0 +1,209 @@
+﻿@model ContactVM
+@inject UserManager<AppUser> userManager;
+@{
+    ViewData["Title"] = "Contact";
+}
+
+<!-- Main star -->
+<main>
+
+    <section id="contact-header-img">
+        <div class="contact-bg-img" style="background-image: url(../../assets/images/@Model.HeaderBackgrounds["PagesBg"])">
+            <h1>CONTACT US</h1>
+            <img src="./assets/images/banner-on-logo.png" alt="">
+        </div>
+    </section>
+
+    <section id="contact-content">
+        <div class="container my-5">
+            <div class="row">
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d24313.215380891517!2d49.86191205!3d40.3833254!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2saz!4v1678084299482!5m2!1sen!2saz"
+                            width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <div class="contact-right">
+                        <div class="contact-right-header">
+                            <div class="contact-title">
+                                <h3>OUR STORES</h3>
+                            </div>
+                            <div class="contact-logo">
+                                <img src="~/assets/images/banner-on-logo.png" alt="">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <div class="store-name">
+                                    <h4>STORE-1</h4>
+                                </div>
+                                <div class="store-location">
+                                    <ul>
+                                        <li><span><a href=""> @Model.Settings["StoreOnePlace"]</a></span></li>
+                                        <li><a href=""> @Model.Settings["StoreOne Phone"]</a></li>
+                                        <li>
+                                            <a href="https://calla.qodeinteractive.com/">@Model.Settings["Stores Email"]</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="store-social">
+                                    <ul>
+                                        <li>
+                                            <p>@Model.Settings["Weekdays days"]: @Model.Settings["Weekday hours"]</p>
+                                        </li>
+                                        <li>
+                                            <p>@Model.Settings["Weekend days"]: @Model.Settings["Weekend hours"]</p>
+                                        </li>
+                                        <ul>
+                                            <ul class="social">
+                                                <li>
+                                                    <a href="">
+                                                        <i class="fa-brands fa-instagram"
+                                                           style="color:  #909090;"></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="">
+                                                        <i class="fa-brands fa-twitter"
+                                                           style="color:  #909090;"></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="">
+                                                        <i class="fa-brands fa-facebook-f"
+                                                           style="color: #909090;"></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="">
+                                                        <i class="fa-brands fa-linkedin-in"
+                                                           style="color: #909090;"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </ul>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <div class="store-name">
+                                    <h4>STORE-2</h4>
+                                </div>
+                                <div class="store-location">
+                                    <ul>
+                                        <li><span><a href=""> @Model.Settings["StoreTwoPlace"]</a></span></li>
+                                        <li><a href="">@Model.Settings["StoreTwo Phone"]</a></li>
+                                        <li>
+                                            <a href="https://calla.qodeinteractive.com/">@Model.Settings["Stores Email"]</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="store-social">
+                                    <ul>
+                                        <li>
+                                            <p>@Model.Settings["Weekdays days"]: @Model.Settings["Weekday hours"]</p>
+                                        </li>
+                                        <li>
+                                            <p>@Model.Settings["Weekend days"]: @Model.Settings["Weekend hours"]</p>
+                                        </li>
+                                        <ul>
+                                            <ul class="social">
+                                                @foreach (var item in Model.Socials)
+                                                {
+                                                    <li>
+                                                        <a class="social-icon" href="@item.Link"
+                                                           target="_blank">
+                                                            <i class="@item.Icon" style="color:  #767575;"></i>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </ul>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="content-input">
+        <div class="container">
+            <div class="inputs-header">
+                <div class="inputs-title">
+                    <h3>GET IN TOUCH</h3>
+                </div>
+                <div class="contact-logo">
+                    <img src="~/assets/images/banner-on-logo.png" alt="">
+                </div>
+            </div>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form id="contact-form"
+                      class="contact-form"
+                      method="post" asp-action="PostComment">
+                    <div class="inputs">
+                        <input name="Name" asp-for="Name" required="" type="text" placeholder="NAME" value="@userManager.Users.FirstOrDefault(u=>u.UserName==User.Identity.Name).FirstName">
+                        <input name="Email" asp-for="Email" required="" type="text" placeholder="E-MAIL" value="@userManager.Users.FirstOrDefault(u=>u.UserName==User.Identity.Name).Email">
+                        <input name="Phone" asp-for="Phone" required="" type="text" placeholder="TELEPHONE">
+                    </div>
+                    <div class="text-area">
+                        <textarea name="Message" asp-for="Message" required="" type="text" id="" cols="30" rows="10" placeholder="WRITE YOUR MESSAGE HERE..."></textarea>
+                    </div>
+
+                    <div class="subscribe-button">
+                        <button>SUBSCRIBE</button>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <form id="contact-form"
+                      class="contact-form"
+                      method="post" asp-action="PostComment">
+                    <div class="inputs">
+                        <input type="text" placeholder="NAME">
+                        <input type="text" placeholder="E-MAIL">
+                        <input type="text" placeholder="TELEPHONE">
+                    </div>
+                    <div class="text-area">
+                        <textarea name="" id="" cols="30" rows="10" placeholder="WRITE YOUR MESSAGE HERE..."></textarea>
+                    </div>
+
+                    <div class="subscribe-button">
+                        <button>SUBSCRIBE</button>
+                    </div>
+                </form>
+            }
+        </div>
+    </section>
+
+    <section id="brands">
+        <div class="container">
+            <div class="brands-list d-flex">
+                @foreach (var brand in Model.Brands)
+                {
+                    <div class="single-brands">
+                        <img src="~/assets/images/@brand.Image" alt="">
+                    </div>
+                }
+            </div>
+        </div>
+
+    </section>
+
+
+
+</main>
+<!-- Main end -->
+@section Scripts{
+    <script src="~/assets/js/contact.js"></script>
+}

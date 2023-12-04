@@ -1,0 +1,206 @@
+﻿@model LayoutVM
+@inject UserManager<AppUser> usermanager;
+
+<header>
+    <nav>
+
+        <div class="up-navbar d-lg-block d-none">
+            <div class="col-lg-12">
+                <div class="up-navbar-sections d-flex ">
+                    <div class="bg__img">
+                        <img class="img-fluid" src="~/assets/images/@Model.Settings["Web Site Header"]" alt="">
+                    </div>
+                    <div class="left">
+                        <div class="textwidget">
+                            <p>free call <a href="tel:00854532214">@Model.Settings["Header Phone"]</a></p>
+                        </div>
+                    </div>
+
+                    <div class="medium">
+                        <div class="textwidget">
+
+                            <p>
+                                <span style="font-size: 14px;">
+                                    @Model.Settings["Text Widget"]
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="right">
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <div class="login-register">
+                                <div class="login">
+                                    <a asp-controller="Account" asp-action="Login">Login</a>
+                                </div>
+                                <div class="register">
+                                    <a asp-controller="Account" asp-action="Register">Register</a>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="account">
+                                <form asp-controller="Account" asp-action="Logout" asp-route-userId="@usermanager.Users.Where(u=>u.UserName==User.Identity.Name).FirstOrDefault().Id" method="post">
+                                    <div class="logout">
+                                        <button style="border:none; color: white; background: transparent; margin-left: 45px; " type="submit">Logout</button>
+                                    </div>
+                                </form>
+
+                                <div class="my-account">
+                                    <a href="#">@User.Identity.Name</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="fixed-nav">
+            <div class="logo col-lg-12 d-lg-block d-none">
+                <a asp-controller="Home" asp-action="index"> <img src="~/assets/images/@Model.Settings["SiteLogo"]" alt="logo"></a>
+            </div>
+
+            <div class="down-navbar d-lg-block d-none">
+                <div class="col-lg-12">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-1">
+                                <div class="social-icons">
+                                    @foreach (var item in Model.Socials.Skip(1))
+                                    {
+                                        <a class="social-icon" href="@item.Link"
+                                           target="_blank">
+                                            <i class="@item.Icon" style="color:  #767575;"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-9">
+                                <ul class="nav-main-menu">
+                                    <li>
+                                        <a asp-controller="Home" asp-action="Index"><span>Home</span></a>
+                                    </li>
+                                    <li>
+                                        <a asp-controller="About" asp-action="Index"><span>About</span></a>
+                                    </li>
+
+                                    <li>
+                                        <a asp-controller="Blog" asp-action="Index"><span>Blog</span></a>
+                                    </li>
+
+                                    <li>
+                                        <a asp-controller="Shop" asp-action="Index"><span>Shop</span></a>
+                                    </li>
+                                    <li>
+                                        <a asp-controller="Contact" asp-action="Index"><span>Contact</span></a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                            <div class="col-2">
+                                <ul class="right-icons">
+                                    <li>
+                                        <i class="fa-solid fa-magnifying-glass fa-flip-horizontal search-icon"
+                                           style="color: #616161;"></i>
+                                    </li>
+                                    <li>
+                                        <a asp-controller="Wishlist" asp-action="Index">
+                                            <i class="fa-regular fa-heart"
+                                               style="color: #616161;"></i>
+                                        </a>
+                                    </li>
+                                    <span class="wishlist-count">@Model.WishlistCount</span>
+                                    <li><a asp-controller="Cart" asp-action="Index"><i class="fa-solid fa-basket-shopping" style="color: #767272;"></i></a></li>
+                                    <span class="basket-count">@Model.BasketCount</span>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <form asp-controller="Shop" asp-action="Index">
+                        <div class="search-input">
+                            <input name="searchText" type="text" placeholder="Search here...">
+                            <i class="fa-solid fa-xmark close-icon" style=" color: #8a8a8abd;"></i>
+                            <button class="widgets-searchbox-btn" style="display: none;" type="submit">
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <nav>
+        <div class="responsive-navbar d-lg-none d-block">
+            <div class="hamburger-icon">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+            <div class="logo col-lg-12 col-md-12 col-sm-12">
+                <a asp-controller="Home" asp-action="index"> <img src="~/assets/images/@Model.Settings["SiteLogo"]" alt="logo"></a>
+            </div>
+            <form asp-controller="Shop" asp-action="Index">
+                <div class="search d-none">
+                    <input name="searchText" type="text" placeholder="Search here...">
+                    <i class="fa-solid fa-xmark closeIcon" style=" color: #8a8a8abd;"></i>
+                </div>
+                <button class="widgets-searchbox-btn" style="display: none;" type="submit">
+                </button>
+            </form>
+
+            <div class="right-icons">
+                <ul class="icons">
+                    <li><a href=""><i class="fa-regular fa-user"></i></a></li>
+                    <ul class="log-reg d-none">
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <li><a asp-controller="Account" asp-action="Login">Login</a></li>
+                            <li><a asp-controller="Account" asp-action="Register">Register</a></li>
+                        }
+                        else
+                        {
+                            <form asp-controller="Account" asp-action="Logout" asp-route-userId="@usermanager.Users.Where(u=>u.UserName==User.Identity.Name).FirstOrDefault().Id" method="post">
+
+                            <li>
+                                <button style="border:none; color: #b97a56; background: transparent; " type="submit">Logout</button>
+                            </li>
+                            </form>
+
+                            <li> <a href="#">@User.Identity.Name</a></li>
+                        }
+                    </ul>
+                    <li>
+                        <a href="#"><i class="fa-solid fa-magnifying-glass fa-flip-horizontal searchIcon"></i></a>
+                    </li>
+                    <li><a asp-controller="Wishlist" asp-action="Index"><i class="fa-regular fa-heart"></i></a></li>
+                    <span class="wishlist-count">@Model.WishlistCount</span>
+                    <li><a asp-controller="Cart" asp-action="Index"><i class="fa-solid fa-cart-shopping"></i></a></li>
+                    <span class="basket-count">@Model.BasketCount</span>
+
+                </ul>
+            </div>
+            <div class="hamburger-menu-list">
+                <ul class="nav-menu close">
+                    <li>
+                        <a asp-controller="Home" asp-action="Index"><span>Home</span></a>
+                    </li>
+                    <li>
+                        <a asp-controller="About" asp-action="Index"><span>About</span></a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Blog" asp-action="Index"><span>Blog</span></a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Shop" asp-action="Index"><span>Shop</span></a>
+                    </li>
+                    <li>
+                        <a asp-controller="Contact" asp-action="Index"><span>Contact</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

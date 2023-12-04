@@ -1,0 +1,254 @@
+﻿@model BlogDetailVM
+@inject UserManager<AppUser> userManager
+@{
+    ViewData["Title"] = "BlogDetail";
+}
+
+<main>
+    <section id="detail-header-img">
+        <div class="detail-bg-img" style="background-image: url(../../assets/images/@Model.HeaderBackgrounds["PagesBg"])">
+            <h1>Blog's Detail</h1>
+            <img src="~/assets/images/banner-on-logo.png" alt="">
+        </div>
+    </section>
+
+    <section id="blog-info">
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-lg-9 col-md-12 col-sm-12">
+                    <div class="single-blog-main-img">
+                        <img class="img-fluid" src="~/assets/images/@Model.SingleBlog.BlogImage.FirstOrDefault()?.Image" alt="">
+                    </div>
+                    <div class="blog-post-text">
+                        <div class="post-info-top">
+                            <div class="post-info-author">
+                                <span>@Model.SingleBlog.Author.Name</span>
+                            </div>
+                            <div class="post-date">
+                                <span> @Model.SingleBlog.CreateDate.ToString("dd.MM.yyyy") </span>
+                            </div>
+                        </div>
+                        <div class="post-title">
+                            <h3><a href="#"> @Model.SingleBlog.Title</a></h3>
+                        </div>
+                        <div class="post-description">
+                            <p>
+                                @Model.SingleBlog.Description
+                            </p>
+                        </div>
+                        <hr>
+                        <div class="blog-social">
+
+                            @foreach (var item in Model.Socials.Skip(1))
+                            {
+                                <a class="social-icon" href="@item.Link"
+                                   target="_blank">
+                                    <i class="@item.Icon" style="color:  #767575;"></i>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                    <div class="related-blog-header">
+                        <h2>RELATED POSTS</h2>
+                    </div>
+
+                    <div class="related-blog">
+                        <div class="row">
+                            @foreach (var relatedBlog in Model.RelatedBlogs.Take(3))
+                            {
+                                <div class="col-lg-4 col-md-6 col-sm-12">
+                                    <div class="blog-card">
+                                        <div class="single-blog-main-img">
+                                            <img class="img-fluid" src="~/assets/images/@relatedBlog.BlogImage.FirstOrDefault()?.Image" alt="">
+                                        </div>
+                                        <div class="post-title">
+                                            <h3><a asp-controller="Blog" asp-action="BlogDetail" asp-route-id="@relatedBlog.Id">@relatedBlog.Title</a></h3>
+                                        </div>
+                                        <div class="post-info">
+
+                                            <div class="post-info-author">
+                                                <span>BY @relatedBlog.Author.Name</span>
+                                            </div>
+                                            <div class="post-date">
+                                                <span> @relatedBlog.CreateDate.ToString("dd.MM.yyyy") </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <h2 class="product-rewiev">COMMENTS (@Model.BlogComments.Count)</h2>
+                    <ul class="commentlist">
+                        <li class="review">
+                            <div class="comment_container">
+                                @foreach (var item in Model.SingleBlog.BlogComments)
+                                {
+                                    <div class="comment-text">
+                                        <p class="meta">
+                                            <div class="comment-info">
+                                                <h5 class="comment-user-name">
+                                                    @item.Name
+                                                </h5>
+                                                @*<a class="reply" href="">reply</a>*@
+                                            </div>
+                                            <span class="comment-date">@item.CreateDate.ToString("dd.MM.yyyy")</span>
+                                        </p>
+                                        <div class="comment-description">
+                                            <p>@item.Message</p>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </li>
+                    </ul>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="comment">
+                            <h5 class="comment-header">POST A COMMENT</h5>
+                            <form class="feedback-form" method="post" asp-action="PostComment" asp-route-id="@Model.SingleBlog.Id" asp-route-userId="@userManager.Users.FirstOrDefault(u=>u.UserName==User.Identity.Name).Id">
+                                <textarea id="" cols="30" rows="10" placeholder="YOUR COMMENT" asp-for="BlogCommentVM.Message"></textarea>
+                                <div class="input">
+                                    <input type="text" placeholder="YOUR NAME"
+                                           readonly
+                                           value="@string.Join(" ", userManager.Users.FirstOrDefault(u => u.UserName == User.Identity.Name).FirstName, userManager.Users.FirstOrDefault(u => u.UserName == User.Identity.Name).LastName)"
+                                           asp-for="BlogCommentVM.Name" />
+                                </div>
+                                <div class="input">
+                                    <input type="email" placeholder="YOUR EMAIL"
+                                           readonly
+                                           value="@userManager.Users.FirstOrDefault(u=>u.UserName==User.Identity.Name).Email"
+                                           asp-for="BlogCommentVM.Email" />
+                                </div>
+                                <div class="submit-button">
+                                    <button type="submit">SUBMIT</button>
+                                </div>
+                            </form>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="comment">
+                            <h5 class="comment-header">POST A COMMENT</h5>
+                            <textarea id="" cols="30" rows="10" placeholder="YOUR COMMENT"></textarea>
+                            <div class="input">
+                                <input type="text" placeholder="YOUR NAME" />
+                            </div>
+                            <div class="input">
+                                <input type="email" placeholder="YOUR EMAIL" />
+                            </div>
+                            <a asp-controller="Account" asp-action="Login">
+
+                                <div class="submit-button">
+                                    <button type="submit">SUBMIT</button>
+                                </div>
+                            </a>
+
+                        </div>
+                    }
+                </div>
+                <div class="col-lg-3 col-md-12 col-sm-12">
+                    <div class="right">
+                        <div class="blog-author">
+                            <div class="author-img">
+                                <img class="img-fluid" src="~/assets/images/@Model.Authors.FirstOrDefault()?.Image" alt="">
+                                <div class="author-detail">
+                                    <div class="author-name">
+                                        <h5>@Model.Authors.FirstOrDefault()?.Name</h5>
+                                    </div>
+                                    <div class="author-email">
+                                        <span>@Model.Authors.FirstOrDefault()?.Email</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="lates-posts">
+                            <h4>LATEST POSTS</h4>
+                            @foreach (var latesBlog in Model.LatesBlog.Take(3))
+                            {
+                                <div class="lates-post">
+                                    <div class="post-img">
+                                        <img src="~/assets/images/@latesBlog.BlogImage?.FirstOrDefault()?.Image" alt="">
+                                    </div>
+                                    <div class="post-info">
+                                        <p class="lates-title"><a asp-controller="Blog" asp-action="BlogDetail" asp-route-id="@latesBlog.Id" style="color: currentColor;">@latesBlog.Title</a></p>
+                                        <span class="lates-date"> @latesBlog.CreateDate.ToString("dd.MM.yyyy") </span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="category">
+                            <div class="category-header">
+                                <h6>CATEGORIES</h6>
+                            </div>
+                            <div class="categories">
+                                <ul>
+                                    <li>
+                                        <a asp-controller="Shop" asp-action="Index" class="category">
+                                            All (@Model.CountProducts)
+                                        </a>
+                                    </li>
+                                    @foreach (var category in Model?.Categories)
+                                    {
+                                        <li>
+                                            <a asp-controller="Shop" asp-action="Index" asp-route-categoryId="@category.Id" data-id="@category.Id" class="category">
+                                                @category.Name
+                                                <span>(@category.ProductCategories?.Count())</span>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="tag">
+                            <div class="tag-header">
+                                <h6>TAGS</h6>
+                            </div>
+                            <div class="tags">
+                                <ul>
+                                    @foreach (var item in Model?.Tags)
+                                    {
+                                        <li>
+                                            <a asp-controller="Shop" asp-action="Index" asp-route-tagId="@item.Id">@item.Name,</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="instagram">
+                            <div class="instagram-header">
+                                <h6>INSTAGRAM</h6>
+                            </div>
+                            <div class="instagram-photo">
+                                <div class="row">
+                                    @foreach (var miniImage in Model.MiniImages)
+                                    {
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                            <div class="instagram-img">
+                                                <img src="~/assets/images/@miniImage.Image" alt="">
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+
+
+
+
+
+
+

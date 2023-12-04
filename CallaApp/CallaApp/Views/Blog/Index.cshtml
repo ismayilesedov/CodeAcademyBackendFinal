@@ -1,0 +1,174 @@
+﻿@model BlogVM
+
+@{
+    ViewData["Title"] = "Blog";
+
+}
+
+<!-- Main star -->
+<main>
+    <section id="about-header-img">
+        <div class="about-bg-img" style="background-image: url(../../assets/images/@Model.HeaderBackgrounds["PagesBg"])">
+            <h1>BLOG</h1>
+            <img src="~/assets/images/banner-on-logo.png" alt="">
+        </div>
+    </section>
+    <section id="blog-post-img">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9 col-md-12 col-sm-12">
+                    @foreach (var blog in Model.PaginateDatas.Datas)
+                    {
+                        <div class="blog-slide1">
+                            <div class="container my-5">
+                                <div class="swiper mySwiper">
+                                    <div class="swiper-wrapper">
+                                        @foreach (var blogImage in blog.BlogImage)
+                                        {
+                                            <div class="swiper-slide slider1">
+                                                <img src="~/assets/images/@blogImage.Image" alt="">
+                                            </div>
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container my-5">
+                                <div class="blog-post-text">
+                                    <div class="post-info-top">
+                                        <div class="post-info-author">
+                                            <span>BY @blog.Author.Name</span>
+                                        </div>
+                                        <div class="post-date">
+                                            <span> @blog.CreateDate.ToString("dd.MM.yyyy") </span>
+                                        </div>
+                                    </div>
+                                    <div class="post-title">
+                                        <h3><a asp-controller="Blog" asp-action="BlogDetail" asp-route-id="@blog.Id">@blog.Title</a></h3>
+                                    </div>
+                                    <div class="post-description">
+                                        <p> @blog.Description.Substring(0,700)</p>
+                                    </div>
+                                    <div class="post-readmore-btn">
+                                        <a asp-controller="Blog" asp-action="BlogDetail" asp-route-id="@blog.Id">READ MORE</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+
+                <div class="col-lg-3 col-md-12 col-sm-12">
+                    <div class="right">
+                        <div class="blog-author">
+                            <div class="author-img">
+                                <img class="img-fluid" src="~/assets/images/team-member2.jpg" alt="">
+                                <div class="author-detail">
+                                    <div class="author-name">
+                                        <h5>@Model.Authors.FirstOrDefault()?.Name</h5>
+                                    </div>
+                                    <div class="author-email">
+                                        <span>@Model.Authors.FirstOrDefault()?.Email</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="lates-posts">
+                            <h4>LATEST POSTS</h4>
+                            @foreach (var latesBlog in Model.LatesBlog.Take(3))
+                            {
+                                <div class="lates-post">
+                                    <div class="post-img">
+                                        <img src="~/assets/images/@latesBlog.BlogImage?.FirstOrDefault()?.Image" alt="">
+                                    </div>
+                                    <div class="post-info">
+                                        <p class="lates-title"><a asp-controller="Blog" asp-action="BlogDetail" asp-route-id="@latesBlog.Id" style="color: currentColor;">@latesBlog.Title</a></p>
+                                        <span class="lates-date"> @latesBlog.CreateDate.ToString("dd.MM.yyyy") </span>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+
+                        <div class="category">
+                            <div class="category-header">
+                                <h6>CATEGORIES</h6>
+                            </div>
+                            <div class="categories">
+                                <ul>
+                                    <li>
+                                        <a asp-controller="Shop" asp-action="Index" class="category all-products">
+                                            All (@Model.CountProducts)
+                                        </a>
+                                    </li>
+                                    @foreach (var category in Model.Categories)
+                                    {
+                                        <li>
+                                            <a asp-controller="Shop" asp-action="Index" asp-route-categoryId="@category.Id" data-id="@category.Id" class="category">@category.Name (@category.ProductCategories?.Count)</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="tag">
+                            <div class="tag-header">
+                                <h6>TAGS</h6>
+                            </div>
+                            <div class="tags">
+                                <ul>
+                                    @foreach (var tag in Model.Tags)
+                                    {
+                                        <li><a asp-controller="Shop" asp-action="Index" asp-route-tagId="@tag.Id" class="prod-tag">@tag.Name,</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="instagram">
+                            <div class="instagram-header">
+                                <h6>INSTAGRAM</h6>
+                            </div>
+                            <div class="instagram-photo">
+                                <div class="row">
+                                    @foreach (var miniImage in Model.MiniImages)
+                                    {
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                            <div class="instagram-img">
+                                                <img  src="~/assets/images/@miniImage.Image" alt="">
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="page-number">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item  @(Model.PaginateDatas.HasPrevious ? " " : "d-none")">
+                            <a class="page-link" asp-action="Index" asp-route-page="@(Model.PaginateDatas.CurrentPage - 1)" aria-label="Previous">&laquo;</a>
+                        </li>
+                        @for (int i = 1; i <= Model.PaginateDatas.TotalPage; i++)
+                        {
+                            <li class="page-item  @(Model.PaginateDatas.CurrentPage == i ? "disabled" : "") ">
+                                <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+                            </li>
+                        }
+                        <li class="page-item  @(Model.PaginateDatas.HasNext ? " " : "d-none")">
+                            <a class="page-link" asp-action="Index" asp-route-page="@(Model.PaginateDatas.CurrentPage + 1)" aria-label="Next">&raquo;</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<!-- Main end -->
+@section Scripts{
+    <script src="~/assets/js/blog.js"></script>
+}

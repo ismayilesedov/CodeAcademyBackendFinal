@@ -1,0 +1,344 @@
+﻿@model HomeVM
+@inject UserManager<AppUser> userManager
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<!-- Main start -->
+<main>
+    <section id="slider">
+        <div class="container">
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    @foreach (var slider in Model.Sliders)
+                    {
+                        <div class="swiper-slide slider1">
+
+                            <img src="~/assets/images/@slider.Image" alt=""><img src="~/assets/images/slider-on-img.jpg" alt=""> <img src="~/assets/images/slider-on-logo.png" alt="">
+                            <h1 class="slider-title">@slider.Title</h1>
+                            <div class="slider-text">
+                                <p>@slider.Description</p>
+                            </div>
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="arrivals">
+        <div class="container mt-5">
+            <div class="col-lg-12">
+                <div class="arrivals-content">
+                    <h4>@Model.HeaderBackgrounds["Arrival Header"]</h4>
+                    <h2> @Model.HeaderBackgrounds["Arrival Content"] </h2>
+                    <div class="arrival-img"> <img src="~/assets/images/slider-on-logo.png" alt=""> </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </section>
+
+    <section id="products-slider">
+        <div class="container mt-5">
+            <div class="product-cards ">
+                @foreach (var product in Model.Products.OrderByDescending(p => p.SaleCount))
+                {
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="~/assets/images/@product.Images?.Where(p => p.IsMain).FirstOrDefault()?.Image" alt="">
+                        </div>
+                        <div class="product-img-hover ">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <i class="fa-regular fa-heart add-to-wishlist" data-id="@product.Id"></i>
+                                <i class="fa-solid fa-heart delete-from-wishlist d-none" data-id="@product.Id"></i>
+                                <div class="add-btn-first">
+                                    <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+                                </div>
+                                <div data-id="@product.Id" class="add-btn-second addCart">
+                                </div>
+                            }
+                            else
+                            {
+                                <a asp-controller="Account" asp-action="Login">
+                                    <i class="fa-regular fa-heart"></i>
+                                    <i class="fa-solid fa-heart d-none"></i>
+                                    <div class="add-btn-first">
+                                        <button>Add to Cart</button>
+                                    </div>
+                                    <div class="add-btn-second">
+                                    </div>
+                                </a>
+                            }
+                        </div>
+                        <div class="product-name">
+                            <h6><a asp-controller="Shop" asp-action="ProductDetail" asp-route-id="@product.Id"> @product.Name</a></h6>
+                        </div>
+                        <div class="product-price">
+                            <span>
+                                <spna>£ </spna> @product.Price
+                            </span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section id="banner">
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-lg-8 col-md-12 col-sm-12">
+                    <div class="banner-big-img">
+                        <img class="img-fluid" src="~/assets/images/@Model.Banners.FirstOrDefault(b =>b.IsLarge)?.Image"
+                             alt="">
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-12 col-sm-12">
+                    <div class="row">
+                        @foreach (var banner in Model.Banners.Where(b => !b.IsLarge))
+                        {
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <div class="banner-small-img">
+                                    <img class="img-fluid" src="~/assets/images/@banner.Image" alt="">
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="blog">
+        <div class="container mt-5">
+            <div class="col-lg-12">
+                <div class="blog-header-content">
+                    <h4> @Model.HeaderBackgrounds["Articles Header"]</h4>
+                    <h2> @Model.HeaderBackgrounds["Home Blog Header"] </h2>
+                    <div class="blog-header-logo"> <img src="~/assets/images/slider-on-logo.png" alt=""> </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="blogs">
+        <div class="container mt-5">
+            <div class="row">
+                @foreach (var blog in Model.Blogs.Take(3))
+                {
+                    <div class="col-lg-4 col-md-6 col-sm-12 mt-5">
+                        <div class="blog-date">
+                            <span>@blog.CreateDate</span>
+                        </div>
+                        <div class="blog-name">
+                            <h5>@blog.Title </h5>
+                        </div>
+                        <div class="blog-description">
+                            @blog.Description.Substring(0,300)
+                        </div>
+                        <div class="read-more">
+                            <a asp-controller="Blog" asp-action="BlogDetail" asp-route-id="@blog.Id">Read More</a>
+                        </div>
+                    </div>
+                }
+
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+    <section id="gift">
+        <div class="container">
+            <div class="col-lg-12">
+                <div class="gift-img" style="background-image: url(../../assets/images/@Model.HeaderBackgrounds["Gift Backgroun"])">
+                    <h2>@Model.HeaderBackgrounds["Gift Description"]</h2>
+                    <img src="~/assets/images/banner-on-logo.png" alt="">
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section id="our-team">
+        <div class="container mt-5">
+            <div class="team-img" style="background-image: url(../../assets/images/@Model.HeaderBackgrounds["Our Team Background"])">
+                <div class="team-content">
+                    <h4>@Model.HeaderBackgrounds["Team Title"]</h4>
+                    <h2> @Model.HeaderBackgrounds["Team Description"]</h2>
+                    <img src="~/assets/images/logo-white.png" alt="">
+                </div>
+            </div>
+            <div class="members">
+                <div class="row">
+                    @foreach (var team in Model.Teams.Take(4))
+                    {
+                        <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                            <div class="single-member">
+                                <div class="member-img">
+                                    <img class="img-fluid" src="~/assets/images/@team.Image" alt="">
+                                </div>
+                                <div class="member-img-hover">
+                                    <div class="member-detail">
+                                        <div class="member-name">
+                                            <h5>@team.Name</h5>
+                                        </div>
+                                        <div class="member-position">
+                                            <span>@team.Position.Name</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="advertising">
+        <div class="container mt-5">
+            <div class="row">
+                @foreach (var advertising in Model.Advertisings)
+                {
+                    <div class="col-lg-4 col-md-12 col-sm-12 my-2">
+                        <div class="adverb-img " style="background-image: url(./assets/images/@advertising.Image);">
+                            <div class="adverb-icon">
+                                <i class="@advertising.Icon" style="color: #444546;"></i>
+                            </div>
+
+                            <div class="adverb-content">
+                                <h4> @advertising.Name </h4>
+                                <p>@advertising.Description</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section id="decor">
+        <div class="container mt-5">
+            <div class="col-lg-12">
+                <div class="decor-header-content">
+                    <h4> @Model.HeaderBackgrounds["Decor Header"] </h4>
+                    <h2> @Model.HeaderBackgrounds["Decor Beutiful"]</h2>
+                    <div class="decor-header-logo"> <img src="~/assets/images/slider-on-logo.png" alt=""> </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="decors">
+        <div class="container mt-5">
+            <div class="row">
+                @foreach (var decor in Model.Decors)
+                {
+                    <div class="col-lg-3 col-md-6 col-sm-12">
+                        <div class="single-decor">
+                            <div class="decor-imgs">
+                                <img class="img-fluid decor-img" src="~/assets/images/@decor.Image" alt="">
+                                <img class="img-fluid decor-hover-img" src="~/assets/images/@decor.HoverImage"
+                                     alt="">
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section id="news-letter">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="news-letter-content"
+                         style="background-image: url(../../assets/images/@Model.HeaderBackgrounds["News Letter Background"])">
+
+                        <div class="row">
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="newsletter">
+                                    <h4> @Model.HeaderBackgrounds["News Letter Title"] </h4>
+                                    <p>@Model.HeaderBackgrounds["News Letter Description"]</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="col-lg-6 col-md-12 col-sm-12">
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <form method="post" asp-controller="Home" asp-action="PostSubscribe">
+                                            <div class="subscribe" id="">
+                                                <span class="email-input">
+                                                    <input asp-for="Email" required type="text" placeholder="E-MAIL" placeholder="YOUR E-MAIL ADDRESS...">
+                                                    <span class="text-danger" asp-validation-for="Email">@ViewBag.error</span>
+
+                                                </span>
+                                                <div class="subscribe-btn">
+                                                    <button type="submit">Subscribe</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <div class="subscribe" id="">
+                                            <span class="email-input">
+                                                <input asp-for="Email" required type="text" placeholder="E-MAIL" placeholder="YOUR E-MAIL ADDRESS...">
+                                                <span class="text-danger" asp-validation-for="Email">@ViewBag.error</span>
+
+                                            </span>
+                                            <a asp-controller="account" asp-action="Login">
+                                                <div class="subscribe-btn">
+                                                    <button type="submit">Subscribe</button>
+                                                </div>
+                                            </a>
+
+                                        </div>
+                                    }
+
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+    </section>
+
+    <section id="brands">
+        <div class="container">
+            <div class="brands-list d-flex">
+                @foreach (var brand in Model.Brands)
+                {
+                    <div class="single-brands">
+                        <img src="~/assets/images/@brand.Image" alt="">
+                    </div>
+                }
+            </div>
+        </div>
+
+    </section>
+
+</main>
+<!-- Main end -->
+@*@section Scripts{
+    <script src="~/assets/js/common.js"></script>
+}*@
